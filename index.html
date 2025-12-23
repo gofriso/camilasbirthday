@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feliz cumpleaños Camila 💖</title>
+<title>Feliz cumpleaños Camila ✰</title>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
@@ -16,129 +16,159 @@
     font-family: 'Courier Prime', monospace;
   }
 
-  /* --- CAJA Y CONTENEDOR DE CARTAS --- */
-  .contenedor-maquina { margin-bottom: 20px; min-height: 30px; }
+  /* Animación de entrada */
+  @keyframes entradaCaja {
+    from { opacity: 0; transform: translateY(100px) scale(0.8); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* BRILLO DORADO INTENSO Y LATENTE */
+  @keyframes brilloMagico {
+    0% { filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500); }
+    50% { filter: drop-shadow(0 0 35px #FFD700) drop-shadow(0 0 20px #FF8C00); }
+    100% { filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500); }
+  }
+
+  .contenedor-maquina { margin-bottom: 10px; min-height: 40px; text-align: center; }
   .maquina-escribir {
-    font-size: 24px; font-weight: bold; color: #5a3e2b;
+    font-size: 26px; font-weight: bold; color: #5a3e2b;
     white-space: nowrap; overflow: hidden; border-right: 3px solid #5a3e2b;
-    width: 0; animation: typing 3s steps(40, end) forwards;
+    width: 0; animation: typing 1.5s steps(40, end) forwards;
   }
   @keyframes typing { from { width: 0 } to { width: 100% } }
 
-  .caja-regalo { position: relative; height: 60vh; cursor: pointer; z-index: 5; }
-  .caja-regalo img#imagenCaja { height: 100%; width: auto; }
-
-  /* Ajuste del contenedor para albergar las dos filas */
-  .cartas-container {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -45%);
-    width: 320px; height: 240px; display: none; z-index: 10;
+  /* CAJA */
+  .caja-regalo { 
+    position: relative; height: 85vh; display: inline-block; cursor: pointer; z-index: 5; 
+    transition: filter 0.5s ease;
+  }
+  
+  .caja-regalo.cerrada {
+    animation: entradaCaja 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+               brilloMagico 2s infinite ease-in-out;
   }
 
-  .grupo-carta { position: absolute; width: 90px; cursor: pointer; transition: 0.3s; }
-  .grupo-carta:hover { transform: scale(1.1) !important; z-index: 50; }
+  .caja-regalo img#imagenCaja { height: 100%; width: auto; display: block; }
 
-  /* FILA SUPERIOR (3 cartas) */
-  .pos1 { left: 10px;  top: 10px; transform: rotate(-10deg); } 
-  .pos2 { left: 115px; top: 0px;  transform: rotate(0deg);   } 
-  .pos3 { left: 220px; top: 10px; transform: rotate(10deg);  } 
+  /* CARTAS JUNTAS */
+  .cartas-container {
+    position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%);
+    width: 65%; height: 45%; display: none; z-index: 10;
+  }
 
-  /* FILA INFERIOR (2 cartas centradas) */
-  .pos4 { left: 60px;  top: 110px; transform: rotate(-5deg); } 
-  .pos5 { left: 170px; top: 110px; transform: rotate(5deg);  }
+  .grupo-carta { 
+    position: absolute; width: 28%; cursor: pointer; 
+    transform: rotate(var(--rot-base));
+    transition: transform 0.3s ease-out;
+  }
+
+  .grupo-carta:hover { 
+    z-index: 100;
+    transform: rotate(var(--rot-base)) translateY(-25px) scale(1.1);
+  }
+
+  .pos1 { left: 5%;  top: 5%;  --rot-base: -12deg; } 
+  .pos2 { left: 36%; top: 0%;  --rot-base: 0deg;   } 
+  .pos3 { left: 67%; top: 5%;  --rot-base: 12deg;  } 
+  .pos4 { left: 18%; top: 42%; --rot-base: -6deg;  } 
+  .pos5 { left: 54%; top: 42%; --rot-base: 6deg;   }
 
   .sobre-img, .tapa-img { width: 100%; display: block; }
-  .tapa-img { position: absolute; top: 0; left: 0; z-index: 20; display: none; pointer-events: none; }
+  .tapa-img { position: absolute; top: -15%; left: 0; z-index: 20; display: none; pointer-events: none; }
 
-  /* --- MODAL DE GALERÍA --- */
+  /* REPRODUCTOR DE MÚSICA */
+  .controles-musica {
+    position: fixed; bottom: 20px; right: 20px;
+    background: white; padding: 10px 15px; border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex; align-items: center; gap: 10px; z-index: 1000;
+    border: 2px solid #5a3e2b;
+  }
+  .btn-musica {
+    background: #5a3e2b; color: white; border: none;
+    width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .nombre-cancion { font-size: 12px; font-weight: bold; color: #5a3e2b; }
+
+  /* MODAL SUPER LECTURA */
   #hojaOverlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); display: none;
+    background: rgba(0,0,0,0.98); display: none;
     align-items: center; justify-content: center; z-index: 10000;
   }
-
   .ventana-modal {
-    position: relative; width: 90vw; max-width: 600px;
-    background: white; border-radius: 12px; padding: 5px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    position: relative; width: 95vw; max-width: 800px;
+    background: white; border-radius: 15px; padding: 10px;
   }
+  .contenedor-slider { width: 100%; height: 85vh; overflow: hidden; border-radius: 8px; }
+  .galeria-slider { display: flex; width: 100%; height: 100%; transition: transform 0.5s ease-in-out; }
+  .slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow-y: auto; }
+  .slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-  .contenedor-slider {
-    width: 100%; height: 85vh;
-    overflow: hidden; border-radius: 8px;
-  }
-
-  .galeria-slider {
-    display: flex; width: 100%; height: 100%;
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-  
-  .slide img { 
-    max-width: 100%; 
-    max-height: 100%; 
-    object-fit: contain;
-    padding: 10px;
-  }
+  .slide.modo-lectura { align-items: flex-start; }
+  .slide.modo-lectura img { max-width: 130%; width: 100%; height: auto; max-height: none; padding: 30px 10px; }
 
   .flecha {
     position: absolute; top: 50%; transform: translateY(-50%);
     background: #5a3e2b; color: white; border: none;
-    width: 55px; height: 55px; border-radius: 50%;
-    cursor: pointer; z-index: 10020; font-size: 28px;
+    width: 80px; height: 80px; border-radius: 50%; cursor: pointer; z-index: 10020; font-size: 40px;
     display: flex; align-items: center; justify-content: center;
   }
-
-  .flecha-izq { left: -70px; }
-  .flecha-der { right: -70px; }
-
-  @media (max-width: 768px) {
-    .flecha-izq { left: 5px; } 
-    .flecha-der { right: 5px; }
-    .flecha { width: 45px; height: 45px; }
-  }
+  .flecha-izq { left: -100px; } .flecha-der { right: -100px; }
 
   .btn-cerrar {
-    position: absolute; top: -15px; right: -15px;
-    background: #e74c3c; color: white; border: none;
-    width: 40px; height: 40px; border-radius: 50%;
-    cursor: pointer; z-index: 10030; font-weight: bold;
+    position: absolute; top: -30px; right: -30px;
+    background: #e74c3c; color: white; border: 4px solid white;
+    width: 65px; height: 65px; border-radius: 50%; cursor: pointer; z-index: 10030;
+    font-size: 28px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+  }
+
+  @media (max-width: 1000px) {
+    .flecha-izq { left: 15px; background: rgba(90, 62, 43, 0.9); }
+    .flecha-der { right: 15px; background: rgba(90, 62, 43, 0.9); }
+    .btn-cerrar { top: 10px; right: 10px; width: 55px; height: 55px; }
+    .caja-regalo { height: 60vh; }
   }
 </style>
 </head>
 <body>
 
   <div class="contenedor-maquina">
-    <div class="maquina-escribir">¡Haz clic para tu sorpresa, Camila!</div>
+    <div class="maquina-escribir">¡Haz clic para tu sorpresa, Camila!✮</div>
   </div>
 
-  <div class="caja-regalo" onclick="toggleCaja()">
+  <div class="caja-regalo cerrada" id="cajaPrincipal" onclick="toggleCaja()">
     <img id="imagenCaja" src="img/cajacerrada.png">
     <div class="cartas-container" id="cartas">
-      
       <div class="grupo-carta pos1" onclick="abrirCarta(event, 1, 'dannayfrida')">
         <img class="sobre-img" src="img/cartacerrada1-dannayfrida.png" id="img-s1">
         <img class="tapa-img" src="img/partearribacarta1.png" id="tapa-1">
       </div>
-
       <div class="grupo-carta pos2" onclick="abrirCarta(event, 3, 'delia')">
         <img class="sobre-img" src="img/cartacerrada3-delia.png" id="img-s3">
         <img class="tapa-img" src="img/partearribacarta3.png" id="tapa-3">
       </div>
-
       <div class="grupo-carta pos3" onclick="abrirCarta(event, 4, 'adan')">
         <img class="sobre-img" src="img/cartacerrada4-adan.png" id="img-s4">
         <img class="tapa-img" src="img/partearribacarta4.png" id="tapa-4">
       </div>
-
       <div class="grupo-carta pos4" onclick="abrirCarta(event, 5, 'sagrayroberto')">
         <img class="sobre-img" src="img/cartacerrada5-sagrayroberto.png" id="img-s5">
         <img class="tapa-img" src="img/partearribacarta5.png" id="tapa-5">
       </div>
-
+      <div class="grupo-carta pos5" onclick="abrirCarta(event, 2, 'silyabe')">
+        <img class="sobre-img" src="img/cartacerrada2-silyabe.png" id="img-s2">
+        <img class="tapa-img" src="img/partearribacarta2.png" id="tapa-2">
       </div>
+    </div>
+  </div>
+
+  <audio id="musicaFondo" src="queen.mp3" loop></audio>
+  
+  <div class="controles-musica">
+    <span class="nombre-cancion">You're My Best Friend 🎵</span>
+    <button class="btn-musica" onclick="controlarMusica()" id="btnPlayPausa">▶</button>
   </div>
 
   <div id="hojaOverlay">
@@ -157,43 +187,36 @@ let index = 0;
 let cajaAbierta = false;
 let cartaActivaId = null;
 let cartaActivaNombre = "";
+const audio = document.getElementById("musicaFondo");
+const btnMusica = document.getElementById("btnPlayPausa");
 
-const fotos = {
-  1: [
-    'img/escritodannayfrida.png', 'img/foto1.jpg', 'img/foto2.jpg', 'img/foto3.jpg',
-    'img/foto4.jpg', 'img/foto5.jpg', 'img/foto6.jpg', 'img/foto7.jpg',
-    'img/foto8.jpg', 'img/foto9.jpg', 'img/foto10.jpg', 'img/foto11.jpg',
-    'img/foto12.jpg', 'img/foto13.jpg'
-  ],
-  3: [
-    'img/escritodelia1.png', 'img/escritodelia2.png', 
-    'img/foto14.jpg', 'img/foto15.jpg', 'img/foto16.jpg', 'img/foto17.jpg', 'img/foto18.jpg'
-  ],
-  4: [
-    'img/escritoadan.png', 
-    'img/foto19.jpg', 'img/foto20.jpg', 'img/foto21.jpg', 'img/foto22.jpg'
-  ],
-  5: [
-    'img/escritosagra.png', 'img/escritoroberto.png',
-    'img/foto23.jpg', 'img/foto24.jpg', 'img/foto25.jpg', 'img/foto26.jpg', 
-    'img/foto27.jpg', 'img/foto28.jpg', 'img/foto29.jpg', 'img/foto30.jpg',
-    'img/foto31.jpg', 'img/foto32.jpg', 'img/foto33.jpg'
-  ]
-};
+function controlarMusica() {
+  if (audio.paused) {
+    audio.play();
+    btnMusica.innerText = "⏸";
+  } else {
+    audio.pause();
+    btnMusica.innerText = "▶";
+  }
+}
 
 function toggleCaja() {
-  const cartas = document.getElementById("cartas");
-  const imgCaja = document.getElementById("imagenCaja");
   cajaAbierta = !cajaAbierta;
+  const cajaEl = document.getElementById("cajaPrincipal");
   
-  if(cajaAbierta) {
-    imgCaja.src = "img/cajaabierta.png";
-    cartas.style.display = "block";
-    confetti();
+  if (cajaAbierta) {
+    cajaEl.classList.remove("cerrada");
+    // Al abrir la caja por primera vez, intentamos reproducir la música
+    audio.play().catch(e => console.log("Esperando interacción para música"));
+    btnMusica.innerText = "⏸";
   } else {
-    imgCaja.src = "img/cajacerrada.png";
-    cartas.style.display = "none";
+    cajaEl.classList.add("cerrada");
   }
+
+  document.getElementById("imagenCaja").src = cajaAbierta ? "img/cajaabierta.png" : "img/cajacerrada.png";
+  document.getElementById("cartas").style.display = cajaAbierta ? "block" : "none";
+  
+  if(cajaAbierta) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 }
 
 function abrirCarta(e, id, nombre) {
@@ -201,38 +224,40 @@ function abrirCarta(e, id, nombre) {
   cartaActivaId = id;
   cartaActivaNombre = nombre;
   index = 0;
-
   document.getElementById(`img-s${id}`).src = `img/cartaabierta${id}-${nombre}.png`;
   document.getElementById(`tapa-${id}`).style.display = "block";
-
   const galeria = document.getElementById("galeria");
   galeria.innerHTML = "";
-  
-  const lista = fotos[id] || [];
-  lista.forEach(src => {
+  (fotos[id] || []).forEach(src => {
     const div = document.createElement("div");
     div.className = "slide";
+    if (src.toLowerCase().includes("escrito")) div.classList.add("modo-lectura");
     div.innerHTML = `<img src="${src}">`;
     galeria.appendChild(div);
   });
-
-  document.getElementById("btnIzq").style.display = lista.length > 1 ? "flex" : "none";
-  document.getElementById("btnDer").style.display = lista.length > 1 ? "flex" : "none";
-
   document.getElementById("hojaOverlay").style.display = "flex";
   actualizarSlider();
 }
 
-function mover(direccion) {
+// Mantengo tus datos de fotos y funciones de slider igual que antes...
+const fotos = {
+  1: ['img/escritodannayfrida.png', 'img/foto1.jpg', 'img/foto2.jpg', 'img/foto3.jpg', 'img/foto4.jpg', 'img/foto5.jpg', 'img/foto6.jpg', 'img/foto7.jpg', 'img/foto8.jpg', 'img/foto9.jpg', 'img/foto10.jpg', 'img/foto11.jpg', 'img/foto12.jpg', 'img/foto13.jpg'],
+  2: ['img/escritosilyabe.png', 'img/foto34.jpg', 'img/foto35.jpg', 'img/foto36.jpg', 'img/foto37.jpg', 'img/foto38.jpg', 'img/foto39.jpg', 'img/foto40.jpg'],
+  3: ['img/escritodelia1.png', 'img/escritodelia2.png', 'img/foto14.jpg', 'img/foto15.jpg', 'img/foto16.jpg', 'img/foto17.jpg', 'img/foto18.jpg'],
+  4: ['img/escritoadan.png', 'img/foto19.jpg', 'img/foto20.jpg', 'img/foto21.jpg', 'img/foto22.jpg'],
+  5: ['img/escritosagra.png', 'img/escritoroberto.png', 'img/foto23.jpg', 'img/foto24.jpg', 'img/foto25.jpg', 'img/foto26.jpg', 'img/foto27.jpg', 'img/foto28.jpg', 'img/foto29.jpg', 'img/foto30.jpg', 'img/foto31.jpg', 'img/foto32.jpg', 'img/foto33.jpg']
+};
+
+function mover(dir) {
   const lista = fotos[cartaActivaId];
   if (!lista) return;
-  index = (index + direccion + lista.length) % lista.length;
+  index = (index + dir + lista.length) % lista.length;
   actualizarSlider();
 }
 
 function actualizarSlider() {
-  const galeria = document.getElementById("galeria");
-  galeria.style.transform = `translateX(-${index * 100}%)`;
+  document.getElementById("galeria").style.transform = `translateX(-${index * 100}%)`;
+  document.querySelectorAll('.slide').forEach(s => s.scrollTop = 0);
 }
 
 function cerrarHoja() {
