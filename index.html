@@ -43,7 +43,7 @@
   .cartas-container {
     position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%);
     width: 75%; height: 45%; display: none; 
-    z-index: 20; /* Por defecto más alto que la caja al abrirse */
+    z-index: 20; 
   }
 
   @keyframes flotarIntenso {
@@ -156,7 +156,7 @@ const btnMusica = document.getElementById("btnPlayPausa");
 const fotos = {
   1: ['img/escritodannayfrida.png', 'img/foto1.jpg', 'img/foto2.jpg', 'img/foto3.jpg', 'img/foto4.jpg', 'img/foto5.jpg', 'img/foto6.jpg', 'img/foto7.jpg', 'img/foto8.jpg', 'img/foto9.jpg', 'img/foto10.jpg', 'img/foto11.jpg', 'img/foto12.jpg', 'img/foto13.jpg'],
   2: ['img/escritosilyabe.png', 'img/foto34.jpg', 'img/foto35.jpg', 'img/foto36.jpg', 'img/foto37.jpg', 'img/foto38.jpg', 'img/foto39.jpg', 'img/foto40.jpg'],
-  3: ['img/escritodelia1.png', 'img/escritodelia2.png', 'img/foto14.jpg', 'img/foto15.jpg', 'img/foto16.jpg', 'img/foto17.jpg', 'img/foto18.jpg'],
+  3: ['img/escritodelia1.png', 'img/escritodelia2.png', 'img/foto14.jpg', 'img/foto15.jpg', 'img/foto16.jpg', 'img/foto17.jpg', 'img/foto18.jpg', 'img/foto18-2.png'],
   4: ['img/escritoadan.png', 'img/foto19.jpg', 'img/foto20.jpg', 'img/foto21.jpg', 'img/foto22.jpg'],
   5: ['img/escritosagra.png', 'img/escritoroberto.png', 'img/foto23.jpg', 'img/foto24.jpg', 'img/foto25.jpg', 'img/foto26.jpg', 'img/foto27.jpg', 'img/foto28.jpg', 'img/foto29.jpg', 'img/foto30.jpg', 'img/foto31.jpg', 'img/foto32.jpg', 'img/foto33.jpg']
 };
@@ -176,7 +176,6 @@ function toggleCaja() {
     cajaContenedor.classList.remove("cerrada");
     imagenCaja.src = "img/cajaabierta.png";
     contenedorCartas.style.display = "block";
-    // Forzamos que el z-index de las cartas esté por encima de la caja
     contenedorCartas.style.zIndex = "20"; 
     audio.play().catch(() => {});
     btnMusica.innerText = "⏸";
@@ -185,7 +184,6 @@ function toggleCaja() {
     cajaAbierta = false;
     cajaContenedor.classList.add("cerrada");
     imagenCaja.src = "img/cajacerrada.png";
-    // Al cerrar, ocultamos instantáneamente
     contenedorCartas.style.display = "none";
     contenedorCartas.style.zIndex = "1";
   }
