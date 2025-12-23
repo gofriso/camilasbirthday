@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz cumpleaños Camila 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+  body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    overflow: hidden; background-color: #FEF4EA;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* --- CAJA Y CONTENEDOR DE CARTAS --- */
+  .contenedor-maquina { margin-bottom: 20px; min-height: 30px; }
+  .maquina-escribir {
+    font-size: 24px; font-weight: bold; color: #5a3e2b;
+    white-space: nowrap; overflow: hidden; border-right: 3px solid #5a3e2b;
+    width: 0; animation: typing 3s steps(40, end) forwards;
+  }
+  @keyframes typing { from { width: 0 } to { width: 100% } }
+
+  .caja-regalo { position: relative; height: 60vh; cursor: pointer; z-index: 5; }
+  .caja-regalo img#imagenCaja { height: 100%; width: auto; }
+
+  /* Ajuste del contenedor para albergar las dos filas */
+  .cartas-container {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -45%);
+    width: 320px; height: 240px; display: none; z-index: 10;
+  }
+
+  .grupo-carta { position: absolute; width: 90px; cursor: pointer; transition: 0.3s; }
+  .grupo-carta:hover { transform: scale(1.1) !important; z-index: 50; }
+
+  /* FILA SUPERIOR (3 cartas) */
+  .pos1 { left: 10px;  top: 10px; transform: rotate(-10deg); } 
+  .pos2 { left: 115px; top: 0px;  transform: rotate(0deg);   } 
+  .pos3 { left: 220px; top: 10px; transform: rotate(10deg);  } 
+
+  /* FILA INFERIOR (2 cartas centradas) */
+  .pos4 { left: 60px;  top: 110px; transform: rotate(-5deg); } 
+  .pos5 { left: 170px; top: 110px; transform: rotate(5deg);  }
+
+  .sobre-img, .tapa-img { width: 100%; display: block; }
+  .tapa-img { position: absolute; top: 0; left: 0; z-index: 20; display: none; pointer-events: none; }
+
+  /* --- MODAL DE GALERÍA --- */
+  #hojaOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); display: none;
+    align-items: center; justify-content: center; z-index: 10000;
+  }
+
+  .ventana-modal {
+    position: relative; width: 90vw; max-width: 600px;
+    background: white; border-radius: 12px; padding: 5px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  }
+
+  .contenedor-slider {
+    width: 100%; height: 85vh;
+    overflow: hidden; border-radius: 8px;
+  }
+
+  .galeria-slider {
+    display: flex; width: 100%; height: 100%;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+  
+  .slide img { 
+    max-width: 100%; 
+    max-height: 100%; 
+    object-fit: contain;
+    padding: 10px;
+  }
+
+  .flecha {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: #5a3e2b; color: white; border: none;
+    width: 55px; height: 55px; border-radius: 50%;
+    cursor: pointer; z-index: 10020; font-size: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .flecha-izq { left: -70px; }
+  .flecha-der { right: -70px; }
+
+  @media (max-width: 768px) {
+    .flecha-izq { left: 5px; } 
+    .flecha-der { right: 5px; }
+    .flecha { width: 45px; height: 45px; }
+  }
+
+  .btn-cerrar {
+    position: absolute; top: -15px; right: -15px;
+    background: #e74c3c; color: white; border: none;
+    width: 40px; height: 40px; border-radius: 50%;
+    cursor: pointer; z-index: 10030; font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+  <div class="contenedor-maquina">
+    <div class="maquina-escribir">¡Haz clic para tu sorpresa, Camila!</div>
+  </div>
+
+  <div class="caja-regalo" onclick="toggleCaja()">
+    <img id="imagenCaja" src="img/cajacerrada.png">
+    <div class="cartas-container" id="cartas">
+      
+      <div class="grupo-carta pos1" onclick="abrirCarta(event, 1, 'dannayfrida')">
+        <img class="sobre-img" src="img/cartacerrada1-dannayfrida.png" id="img-s1">
+        <img class="tapa-img" src="img/partearribacarta1.png" id="tapa-1">
+      </div>
+
+      <div class="grupo-carta pos2" onclick="abrirCarta(event, 3, 'delia')">
+        <img class="sobre-img" src="img/cartacerrada3-delia.png" id="img-s3">
+        <img class="tapa-img" src="img/partearribacarta3.png" id="tapa-3">
+      </div>
+
+      <div class="grupo-carta pos3" onclick="abrirCarta(event, 4, 'adan')">
+        <img class="sobre-img" src="img/cartacerrada4-adan.png" id="img-s4">
+        <img class="tapa-img" src="img/partearribacarta4.png" id="tapa-4">
+      </div>
+
+      <div class="grupo-carta pos4" onclick="abrirCarta(event, 5, 'sagrayroberto')">
+        <img class="sobre-img" src="img/cartacerrada5-sagrayroberto.png" id="img-s5">
+        <img class="tapa-img" src="img/partearribacarta5.png" id="tapa-5">
+      </div>
+
+      </div>
+  </div>
+
+  <div id="hojaOverlay">
+    <div class="ventana-modal">
+      <button class="btn-cerrar" onclick="cerrarHoja()">✕</button>
+      <button class="flecha flecha-izq" id="btnIzq" onclick="mover(-1)">❮</button>
+      <button class="flecha flecha-der" id="btnDer" onclick="mover(1)">❯</button>
+      <div class="contenedor-slider">
+        <div class="galeria-slider" id="galeria"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+let index = 0;
+let cajaAbierta = false;
+let cartaActivaId = null;
+let cartaActivaNombre = "";
+
+const fotos = {
+  1: [
+    'img/escritodannayfrida.png', 'img/foto1.jpg', 'img/foto2.jpg', 'img/foto3.jpg',
+    'img/foto4.jpg', 'img/foto5.jpg', 'img/foto6.jpg', 'img/foto7.jpg',
+    'img/foto8.jpg', 'img/foto9.jpg', 'img/foto10.jpg', 'img/foto11.jpg',
+    'img/foto12.jpg', 'img/foto13.jpg'
+  ],
+  3: [
+    'img/escritodelia1.png', 'img/escritodelia2.png', 
+    'img/foto14.jpg', 'img/foto15.jpg', 'img/foto16.jpg', 'img/foto17.jpg', 'img/foto18.jpg'
+  ],
+  4: [
+    'img/escritoadan.png', 
+    'img/foto19.jpg', 'img/foto20.jpg', 'img/foto21.jpg', 'img/foto22.jpg'
+  ],
+  5: [
+    'img/escritosagra.png', 'img/escritoroberto.png',
+    'img/foto23.jpg', 'img/foto24.jpg', 'img/foto25.jpg', 'img/foto26.jpg', 
+    'img/foto27.jpg', 'img/foto28.jpg', 'img/foto29.jpg', 'img/foto30.jpg',
+    'img/foto31.jpg', 'img/foto32.jpg', 'img/foto33.jpg'
+  ]
+};
+
+function toggleCaja() {
+  const cartas = document.getElementById("cartas");
+  const imgCaja = document.getElementById("imagenCaja");
+  cajaAbierta = !cajaAbierta;
+  
+  if(cajaAbierta) {
+    imgCaja.src = "img/cajaabierta.png";
+    cartas.style.display = "block";
+    confetti();
+  } else {
+    imgCaja.src = "img/cajacerrada.png";
+    cartas.style.display = "none";
+  }
+}
+
+function abrirCarta(e, id, nombre) {
+  e.stopPropagation();
+  cartaActivaId = id;
+  cartaActivaNombre = nombre;
+  index = 0;
+
+  document.getElementById(`img-s${id}`).src = `img/cartaabierta${id}-${nombre}.png`;
+  document.getElementById(`tapa-${id}`).style.display = "block";
+
+  const galeria = document.getElementById("galeria");
+  galeria.innerHTML = "";
+  
+  const lista = fotos[id] || [];
+  lista.forEach(src => {
+    const div = document.createElement("div");
+    div.className = "slide";
+    div.innerHTML = `<img src="${src}">`;
+    galeria.appendChild(div);
+  });
+
+  document.getElementById("btnIzq").style.display = lista.length > 1 ? "flex" : "none";
+  document.getElementById("btnDer").style.display = lista.length > 1 ? "flex" : "none";
+
+  document.getElementById("hojaOverlay").style.display = "flex";
+  actualizarSlider();
+}
+
+function mover(direccion) {
+  const lista = fotos[cartaActivaId];
+  if (!lista) return;
+  index = (index + direccion + lista.length) % lista.length;
+  actualizarSlider();
+}
+
+function actualizarSlider() {
+  const galeria = document.getElementById("galeria");
+  galeria.style.transform = `translateX(-${index * 100}%)`;
+}
+
+function cerrarHoja() {
+  document.getElementById("hojaOverlay").style.display = "none";
+  if(cartaActivaId) {
+    document.getElementById(`img-s${cartaActivaId}`).src = `img/cartacerrada${cartaActivaId}-${cartaActivaNombre}.png`;
+    document.getElementById(`tapa-${cartaActivaId}`).style.display = "none";
+  }
+}
+</script>
+</body>
+</html>
